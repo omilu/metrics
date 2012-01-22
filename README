@@ -1,0 +1,4 @@
+awk processing of a excel spreadsheet.
+step 1 export data to tab delimited file
+step 2 process the data with a series of awk scripts
+each performing one step.
