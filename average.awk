@@ -1,7 +1,7 @@
 #!/bin/awk -f
 #this is the begin block run once at the beginning
 #use it to initialize everything
-BEGIN { FS="\t"; newgacc = oldgacc = 0;  
+BEGIN { FS="\t"; newgacc = oldgacc = newyear = oldyear = 0;  
 	
 	totalAssignments =0;
 	totalAssignmentsOver7 = 0;
@@ -32,45 +32,29 @@ BEGIN { FS="\t"; newgacc = oldgacc = 0;
 } 
 
 #Each of these blocks triggers when the regular expression matches the line	
-#When new year set the year variable
-	/Inc Calendar Year: 2.../ {
-		year = $1; 
-		if (yeartotalAssignments != 0)
-		{	#compute averages
-			yearaverageNumDays = yeartotalNumDays / yeartotalAssignments;
-	yearaverageNumDaysLessTrav = yeartotalNumDaysLessTrav /	yeartotalAssignments;
-}
-	if (yeartotalAssignmentsOver7 != 0)
-	{
-yearaverageNumDaysOver7LessTrav = yeartotalNumDaysOver7LessTrav / yeartotalAssignmentsOver7;	}
 
-			print year, "\t", yeartotalAssignments,"\t", 
-			yeartotalAssignmentsOver7,"\t", yeartotalNumDays,"\t",
-			yeartotalNumDaysLessTrav, "\t", yeartotalNumDaysOver7LessTrav, "\t", yearaverageNumDays, "\t",  yearaverageNumDaysLessTrav, "\t" 
-			yearaverageNumDaysOver7LessTrav;
-
-		yeartotalAssignments =0;
-	yeartotalAssignmentsOver7 = 0;
-	yeartotalNumDays = 0;
-	yeartotalNumDaysLessTrav = 0;
-	yeartotalNumDaysOver7LessTrav = 0;
-	yearaverageNumDays = 0;
-	yearaverageNumDaysLessTrav = 0;
-	yearaverageNumDaysOver7LessTrav = 0;	
-
-	}
 #When you get a new GACC print the
 #counts, set the GACC variable and reset all the counts	
-	/Inc GACC Org Name:/ {
+	/(Inc GACC Org Name:)|(Inc Calendar Year: 2...)/  {
 		newgacc = $1;
-		if (oldgacc != 0 && totalAssignments != 0)
-		{	#compute averages
+		if (oldgacc != 0)
+		{
+			if (totalAssignments == 0)
+			{
+				averageNumDays = 0;
+				averageNumDaysLessTrav = 0;
+				averageNumDaysOver7LessTrav = 0;
+			}
+			
+			else 
+			{#compute averages
 			averageNumDays = totalNumDays / totalAssignments;
-	averageNumDaysLessTrav = totalNumDaysLessTrav /	totalAssignments;
-	if (totalAssignmentsOver7 != 0)
-	{
-averageNumDaysOver7LessTrav = totalNumDaysOver7LessTrav / totalAssignmentsOver7;	}
-
+			averageNumDaysLessTrav = totalNumDaysLessTrav /	totalAssignments;
+				if (totalAssignmentsOver7 != 0)
+				{		
+averageNumDaysOver7LessTrav = totalNumDaysOver7LessTrav / totalAssignmentsOver7;	
+				}
+			}
 			print oldgacc, "\t", totalAssignments, "\t", 
 			totalAssignmentsOver7, "\t", totalNumDays, "\t",
 			totalNumDaysLessTrav, "\t",totalNumDaysOver7LessTrav,
@@ -88,6 +72,38 @@ averageNumDaysOver7LessTrav = totalNumDaysOver7LessTrav / totalAssignmentsOver7;
 		}
 		oldgacc = newgacc;
 	}
+
+#When new year set the year variable
+	/Inc Calendar Year: 2.../ {
+		newyear = $1;
+		if (oldyear != 0)
+		{
+		if (yeartotalAssignments != 0)
+		{	#compute averages
+			yearaverageNumDays = yeartotalNumDays / yeartotalAssignments;
+	yearaverageNumDaysLessTrav = yeartotalNumDaysLessTrav /	yeartotalAssignments;
+}
+	if (yeartotalAssignmentsOver7 != 0)
+	{
+yearaverageNumDaysOver7LessTrav = yeartotalNumDaysOver7LessTrav / yeartotalAssignmentsOver7;	}
+
+			print oldyear, "\t", yeartotalAssignments,"\t", 
+			yeartotalAssignmentsOver7,"\t", yeartotalNumDays,"\t",
+			yeartotalNumDaysLessTrav, "\t", yeartotalNumDaysOver7LessTrav, "\t", yearaverageNumDays, "\t",  yearaverageNumDaysLessTrav, "\t" 
+			yearaverageNumDaysOver7LessTrav;
+
+		yeartotalAssignments =0;
+		yeartotalAssignmentsOver7 = 0;
+		yeartotalNumDays = 0;
+		yeartotalNumDaysLessTrav = 0;
+		yeartotalNumDaysOver7LessTrav = 0;
+		yearaverageNumDays = 0;
+		yearaverageNumDaysLessTrav = 0;
+		yearaverageNumDaysOver7LessTrav = 0;	
+
+	}
+	oldyear = newyear;
+}
 		
 	{
 		#count stuff only if it is a fire incident
