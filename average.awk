@@ -89,7 +89,7 @@ yearaverageNumDaysOver7LessTrav = yeartotalNumDaysOver7LessTrav / yeartotalAssig
 
 			print oldyear, "\t", yeartotalAssignments,"\t", 
 			yeartotalAssignmentsOver7,"\t", yeartotalNumDays,"\t",
-			yeartotalNumDaysLessTrav, "\t", yeartotalNumDaysOver7LessTrav, "\t", yearaverageNumDays, "\t",  yearaverageNumDaysLessTrav, "\t" 
+			yeartotalNumDaysLessTrav, "\t", yeartotalNumDaysOver7LessTrav, "\t", yearaverageNumDays, "\t",  yearaverageNumDaysLessTrav, "\t", 
 			yearaverageNumDaysOver7LessTrav;
 
 		yeartotalAssignments =0;
